@@ -1,0 +1,11 @@
+Single-database configuration for Flask.
+
+
+flask db init
+flask db migrate -m "Create user table"
+flask db upgrade
+
+
+flask db migrate -m "Add confirmed_at and status to User"
+flask db upgrade
+
