@@ -139,7 +139,7 @@ def google_callback():
         headers={"Authorization": f"Bearer {token_json['access_token']}"}
     )
     user_info = user_info_response.json()
-    print(user_info)
+    print(f"{ user_info =}")
     session["user"] = user_info
 
     return jsonify(user_info)
