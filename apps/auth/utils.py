@@ -1,5 +1,6 @@
 from itsdangerous import URLSafeTimedSerializer
 from flask import current_app
+from apps.models.user import User
 
 
 def generate_token(email):
@@ -17,3 +18,15 @@ def confirm_token(token, expiration=3600):
     except Exception:
         return False
 
+
+def create_unique_username(username):
+    i = 1
+    while is_username_taken(username):
+        username = f"{username}_{i}"
+        i += 1
+    return username
+
+
+def is_username_taken(username):
+    user = User.query.filter_by(username=username).first()
+    return user is not None

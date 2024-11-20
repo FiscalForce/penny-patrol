@@ -5,10 +5,12 @@ load_dotenv()
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY')
+    SECURITY_PASSWORD_SALT = os.environ.get("SECURITY_PASSWORD_SALT", "very-important")
+    # JWT
+    JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "super-secret")
+    # Database
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SECURITY_PASSWORD_SALT = os.environ.get("SECURITY_PASSWORD_SALT", "very-important")
-
     # Mail Settings
     MAIL_DEFAULT_SENDER = "noreply@flask.com"
     MAIL_SERVER = "smtp.gmail.com"

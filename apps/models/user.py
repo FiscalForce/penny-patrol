@@ -10,6 +10,7 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, nullable=True)
     is_confirmed = db.Column(db.Boolean, nullable=False, default=False)
     confirmed_on = db.Column(db.DateTime, nullable=True)
+    is_sso_user = db.Column(db.Boolean, nullable=False, default=False)
 
     def __repr__(self):
         return f"<email {self.email}>"

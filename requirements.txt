@@ -6,3 +6,4 @@ Flask-Mail==0.10.0
 Authlib
 Flask-OAuthlib
 python-dotenv
+flask-jwt-extended

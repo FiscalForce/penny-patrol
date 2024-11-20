@@ -3,13 +3,14 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_mail import Mail
+from flask_jwt_extended import JWTManager
 from authlib.integrations.flask_client import OAuth
 
 
 db = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
-# oauth = OAuth()
+jwt = JWTManager()
 
 
 def create_app():
@@ -20,8 +21,7 @@ def create_app():
     migrate.init_app(app, db)
 
     mail.init_app(app)
-
-    # oauth.init_app(app)
+    jwt.init_app(app)
 
     # blueprints
     from apps.groups.routes import groups

@@ -1,11 +1,13 @@
 import requests
+from datetime import datetime
 from flask import Blueprint, request, jsonify, url_for, render_template, current_app, redirect, session
 from werkzeug.security import generate_password_hash
-from datetime import datetime
+from flask_jwt_extended import create_access_token
 from apps.models.user import User
 from apps import db
 from apps.auth.utils import generate_token, confirm_token
 from apps.utils import send_email
+from apps.auth.utils import create_unique_username
 
 
 auth = Blueprint('auth', __name__, url_prefix='/auth', template_folder='templates')
@@ -74,21 +76,6 @@ def confirm_email(token):
     return render_template('verified_email.html', redirect_url=redirect_url)
 
 
-# @auth.route('/google/login')
-# def google_login():
-#     try:
-#         redirect_uri = url_for('authorize', _external=True)
-#         google = register_google()
-#         return google.authorize_redirect(redirect_uri)
-#     except Exception as e:
-#         current_app.logger.error(f"Error during Google login: {e}")
-#         return jsonify({"message": "Error during Google login"}), 500
-
-
-# @auth.route('/google/call_back')
-# def google_callback():
-#     google = register_google()
-
 # Google SSO
 @auth.route('/google/login')
 def google_login():
@@ -96,9 +83,6 @@ def google_login():
         google_discovery_url = "https://accounts.google.com/.well-known/openid-configuration"
         google_provider_cfg = requests.get(google_discovery_url).json()
         authorization_endpoint = google_provider_cfg["authorization_endpoint"]
-
-
-        print(current_app.config['GOOGLE_CLIENT_ID'])
 
         request_uri = (
             f"{authorization_endpoint}?client_id={current_app.config['GOOGLE_CLIENT_ID']}"
@@ -110,6 +94,7 @@ def google_login():
         return redirect(request_uri)
     except Exception as e:
         print(e)
+        return jsonify({"error": str(e)}), 500
     
 
 @auth.route("/google/callback")
@@ -139,7 +124,29 @@ def google_callback():
         headers={"Authorization": f"Bearer {token_json['access_token']}"}
     )
     user_info = user_info_response.json()
-    print(f"{ user_info =}")
-    session["user"] = user_info
+    
+    user = User.query.filter_by(email=user_info["email"]).first()
+    if not user:
+        # create a unique username
+        username = create_unique_username(user_info.get('given_name'))
+        user = User(username=username,
+                    email=user_info.get("email"),
+                    name=user_info.get("name"),
+                    created_at=datetime.now(),
+                    is_confirmed=True,
+                    confirmed_on = datetime.now(),
+                    is_sso_user = True
+                    )
+        db.session.add(user)
+        db.session.commit()
+
+
+
+    # user = User.query.filter_by(email)
+    # 101548056677760946793
+    # 101548056677760946793
+     # Create and return JWT token
+    jwt_token = create_access_token(user_info['email'])
+    return jsonify({"access_token": jwt_token, "user_info": user_info})
 
     return jsonify(user_info)
