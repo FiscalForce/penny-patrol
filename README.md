@@ -37,7 +37,12 @@ Penny Patrol is in its early stages of development and welcomes contributions fr
    ```bash  
    pip install -r requirements.txt  
    ```
-3. **Add env variable and run the server**:  
+3. **Setting Up Environment Variables**:
+   This project uses a `.env` file to manage sensitive information like API keys and secret tokens.  
+   1. Create a `.env` file in the project root.  
+   2. Copy the structure from `.env.example`:  
+   3. Fill with required values
+4. **Run the server**:  
    ```bash  
    python run.py
    ```
