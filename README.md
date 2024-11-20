@@ -30,8 +30,8 @@ Penny Patrol is in its early stages of development and welcomes contributions fr
 
 1. **Clone the Repository**:  
    ```bash  
-   git clone https://github.com/your-username/penny-patrol-backend.git  
-   cd penny-patrol-backend
+   git clone https://github.com/FiscalForce/penny-patrol.git
+   cd penny-patrol
    ```
 2. **Install Dependencies**:  
    ```bash  
