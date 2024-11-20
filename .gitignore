@@ -8,3 +8,5 @@ dist/
 htmlcov/
 .tox/
 .env
+/migrations
+test.py

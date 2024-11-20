@@ -2,6 +2,7 @@ from flask_mail import Message
 from flask import current_app
 from apps import mail
 
+
 def send_email(to, subject, template):
     msg = Message(
         subject,
